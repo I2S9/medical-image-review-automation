@@ -1,0 +1,131 @@
+.annotation-form {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  min-width: 280px;
+  z-index: 1000;
+}
+
+.annotation-form__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #333;
+  border-bottom: 1px solid #444;
+  border-radius: 6px 6px 0 0;
+}
+
+.annotation-form__header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.annotation-form__close {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.annotation-form__close:hover {
+  background-color: #444;
+  color: #fff;
+}
+
+.annotation-form__body {
+  padding: 1rem;
+}
+
+.annotation-form__field {
+  margin-bottom: 1rem;
+}
+
+.annotation-form__field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.annotation-form__field select {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.annotation-form__field select:hover {
+  border-color: #555;
+}
+
+.annotation-form__field select:focus {
+  outline: none;
+  border-color: #4a9eff;
+}
+
+.annotation-form__coordinates {
+  padding: 0.75rem;
+  background-color: #1a1a1a;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #888;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.annotation-form__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.annotation-form__btn {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  border: 1px solid;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.annotation-form__btn--primary {
+  background-color: #4a9eff;
+  border-color: #4a9eff;
+  color: #fff;
+}
+
+.annotation-form__btn--primary:hover {
+  background-color: #5aaeff;
+  border-color: #5aaeff;
+}
+
+.annotation-form__btn--secondary {
+  background-color: #3a3a3a;
+  border-color: #444;
+  color: #ccc;
+}
+
+.annotation-form__btn--secondary:hover {
+  background-color: #4a4a4a;
+  border-color: #555;
+}
