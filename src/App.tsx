@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { WorkflowController } from '@controller/WorkflowController'
+import { WorkflowController, ReviewStep } from '@controller/WorkflowController'
 import { ViewController } from '@controller/ViewController'
 import { ImageViewer } from '@view/ImageViewer'
 import { AnnotationPanel } from '@view/AnnotationPanel'
+import { WorkflowStepper } from '@view/WorkflowStepper'
 import { createMockImage } from '@utils/mockData'
 import { createAnnotation } from '@utils/annotationUtils'
 
@@ -49,12 +50,59 @@ function App() {
     setWorkflowUpdate((prev) => prev + 1)
   }
 
+  const handleStepClick = (step: ReviewStep) => {
+    if (workflowController.goToStep(step)) {
+      setWorkflowUpdate((prev) => prev + 1)
+    }
+  }
+
+  const handleNextStep = () => {
+    if (workflowController.nextStep()) {
+      setWorkflowUpdate((prev) => prev + 1)
+    }
+  }
+
+  const handlePreviousStep = () => {
+    if (workflowController.previousStep()) {
+      setWorkflowUpdate((prev) => prev + 1)
+    }
+  }
+
+  const canCreateAnnotations = () => {
+    return (
+      workflowState.currentStep === ReviewStep.FocusAreas ||
+      workflowState.currentStep === ReviewStep.DetailedReview
+    )
+  }
+
   return (
     <div className="app">
       <header className="app__header">
         <h1>Medical Image Review Automation</h1>
-        <div className="app__workflow-status">
-          Current step: {workflowState.currentStep}
+        <div className="app__workflow-controls">
+          <button
+            className="app__nav-btn"
+            onClick={handlePreviousStep}
+            disabled={workflowState.currentStep === ReviewStep.Overview}
+          >
+            ← Previous
+          </button>
+          <span className="app__current-step">
+            {workflowState.currentStep === ReviewStep.Overview && 'Overview'}
+            {workflowState.currentStep === ReviewStep.FocusAreas && 'Focus Areas'}
+            {workflowState.currentStep === ReviewStep.DetailedReview && 'Detailed Review'}
+            {workflowState.currentStep === ReviewStep.Summary && 'Summary'}
+          </span>
+          <button
+            className="app__nav-btn app__nav-btn--primary"
+            onClick={handleNextStep}
+            disabled={
+              workflowState.currentStep === ReviewStep.Summary ||
+              workflowState.isComplete
+            }
+          >
+            Next →
+          </button>
         </div>
       </header>
       <main className="app__main">
@@ -64,13 +112,23 @@ function App() {
             annotations={workflowState.annotations}
             viewController={viewController}
             onViewStateChange={handleViewStateChange}
-            onAnnotationCreate={handleAnnotationCreate}
+            onAnnotationCreate={
+              canCreateAnnotations() ? handleAnnotationCreate : undefined
+            }
             onAnnotationSelect={(id) => {
               console.log('Selected annotation:', id)
             }}
           />
         </div>
         <div className="app__panel-section">
+          <WorkflowStepper
+            currentStep={workflowState.currentStep}
+            onStepClick={handleStepClick}
+            canGoToStep={(step) => workflowController.canGoToStep(step)}
+            getStepDescription={(step) =>
+              workflowController.getStepDescription(step)
+            }
+          />
           <AnnotationPanel
             annotations={workflowState.annotations}
             onAnnotationSelect={(id) => {
