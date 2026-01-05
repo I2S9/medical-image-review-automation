@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { WorkflowController, ReviewStep } from '@controller/WorkflowController'
 import { ViewController } from '@controller/ViewController'
 import { ImageViewer } from '@view/ImageViewer'
 import { AnnotationPanel } from '@view/AnnotationPanel'
 import { WorkflowStepper } from '@view/WorkflowStepper'
+import { ContextInsights } from '@view/ContextInsights'
+import { ContextAnalyzer } from '@ai/ContextAnalyzer'
 import { createMockImage } from '@utils/mockData'
 import { createAnnotation } from '@utils/annotationUtils'
 
 function App() {
   const [workflowController] = useState(() => new WorkflowController())
   const [viewController] = useState(() => new ViewController())
+  const [contextAnalyzer] = useState(() => new ContextAnalyzer())
   const [, setViewStateUpdate] = useState(0)
   const [, setWorkflowUpdate] = useState(0)
 
@@ -17,9 +20,23 @@ function App() {
     const mockImage = createMockImage()
     workflowController.loadImage(mockImage)
     setWorkflowUpdate((prev) => prev + 1)
-  }, [workflowController])
+
+    const analysis = contextAnalyzer.analyzeContext(mockImage, [])
+    if (analysis.recommendedView.confidence === 'high') {
+      viewController.setOrientation(analysis.recommendedView.orientation)
+      setViewStateUpdate((prev) => prev + 1)
+    }
+  }, [workflowController, contextAnalyzer, viewController])
 
   const workflowState = workflowController.getState()
+
+  const contextAnalysis = useMemo(() => {
+    if (!workflowState.currentImage) return null
+    return contextAnalyzer.analyzeContext(
+      workflowState.currentImage,
+      workflowState.annotations
+    )
+  }, [workflowState.currentImage, workflowState.annotations, contextAnalyzer])
 
   const handleViewStateChange = () => {
     setViewStateUpdate((prev) => prev + 1)
@@ -43,6 +60,16 @@ function App() {
 
     workflowController.addAnnotation(annotation)
     setWorkflowUpdate((prev) => prev + 1)
+
+    const recommendedView = contextAnalyzer.analyzeRecommendedView(
+      workflowState.currentImage,
+      [...workflowState.annotations, annotation]
+    )
+
+    if (recommendedView.confidence === 'high') {
+      viewController.setOrientation(recommendedView.orientation)
+      setViewStateUpdate((prev) => prev + 1)
+    }
   }
 
   const handleAnnotationDelete = (id: string) => {
@@ -118,6 +145,13 @@ function App() {
             onAnnotationSelect={(id) => {
               console.log('Selected annotation:', id)
             }}
+            getAnnotationRecommendation={(coordinates) => {
+              if (!workflowState.currentImage) return undefined
+              return contextAnalyzer.analyzeAnnotationContext(
+                workflowState.currentImage,
+                coordinates
+              )
+            }}
           />
         </div>
         <div className="app__panel-section">
@@ -129,6 +163,7 @@ function App() {
               workflowController.getStepDescription(step)
             }
           />
+          <ContextInsights analysis={contextAnalysis} />
           <AnnotationPanel
             annotations={workflowState.annotations}
             onAnnotationSelect={(id) => {

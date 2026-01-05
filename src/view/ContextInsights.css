@@ -1,0 +1,123 @@
+.context-insights {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.context-insights__header {
+  margin-bottom: 1rem;
+}
+
+.context-insights__header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  color: #fff;
+}
+
+.context-insights__empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #888;
+  font-size: 0.875rem;
+}
+
+.context-insights__section {
+  margin-bottom: 1.25rem;
+}
+
+.context-insights__section:last-child {
+  margin-bottom: 0;
+}
+
+.context-insights__section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.context-insights__recommendation {
+  padding: 0.75rem;
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  border-left: 3px solid #4a9eff;
+}
+
+.context-insights__view-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: #3a3a3a;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #4a9eff;
+  text-transform: capitalize;
+  margin-bottom: 0.5rem;
+}
+
+.context-insights__reason {
+  font-size: 0.875rem;
+  color: #ccc;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.context-insights__confidence {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.confidence--high {
+  color: #8fcc8f;
+  font-weight: 600;
+}
+
+.confidence--medium {
+  color: #cccc8f;
+  font-weight: 600;
+}
+
+.confidence--low {
+  color: #cc8f8f;
+  font-weight: 600;
+}
+
+.context-insights__focus-list,
+.context-insights__metadata-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.context-insights__focus-item,
+.context-insights__metadata-item {
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+.context-insights__focus-item:last-child,
+.context-insights__metadata-item:last-child {
+  margin-bottom: 0;
+}
+
+.context-insights__focus-item::before {
+  content: '→ ';
+  color: #4a9eff;
+  font-weight: bold;
+  margin-right: 0.25rem;
+}
+
+.context-insights__metadata-item::before {
+  content: 'ℹ ';
+  color: #888;
+  margin-right: 0.25rem;
+}

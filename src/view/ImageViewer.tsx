@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { MedicalImage } from '@model/MedicalImage'
 import { Annotation } from '@model/Annotation'
 import { ViewController, ViewState } from '@controller/ViewController'
+import { AnnotationRecommendation } from '@ai/ContextAnalyzer'
 import { AnnotationForm } from './AnnotationForm'
 import './ImageViewer.css'
 
@@ -17,6 +18,9 @@ interface ImageViewerProps {
     priority: 'low' | 'medium' | 'high'
   }) => void
   onAnnotationSelect?: (annotationId: string) => void
+  getAnnotationRecommendation?: (
+    coordinates: { x: number; y: number }
+  ) => AnnotationRecommendation | undefined
 }
 
 export function ImageViewer({
@@ -26,6 +30,7 @@ export function ImageViewer({
   onViewStateChange,
   onAnnotationCreate,
   onAnnotationSelect,
+  getAnnotationRecommendation,
 }: ImageViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
@@ -283,6 +288,11 @@ export function ImageViewer({
             >
               <AnnotationForm
                 coordinates={pendingAnnotation.imageCoords}
+                recommendation={
+                  getAnnotationRecommendation
+                    ? getAnnotationRecommendation(pendingAnnotation.imageCoords)
+                    : undefined
+                }
                 onSave={handleAnnotationFormSave}
                 onCancel={handleAnnotationFormCancel}
               />

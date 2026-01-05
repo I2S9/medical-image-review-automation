@@ -1,13 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   AnnotationType,
   AnnotationCategory,
   AnnotationPriority,
 } from '@model/Annotation'
+import { AnnotationRecommendation } from '@ai/ContextAnalyzer'
 import './AnnotationForm.css'
 
 interface AnnotationFormProps {
   coordinates: { x: number; y: number }
+  recommendation?: AnnotationRecommendation
   onSave: (data: {
     type: AnnotationType
     category: AnnotationCategory
@@ -18,12 +20,24 @@ interface AnnotationFormProps {
 
 export function AnnotationForm({
   coordinates,
+  recommendation,
   onSave,
   onCancel,
 }: AnnotationFormProps) {
   const [type, setType] = useState<AnnotationType>('point')
-  const [category, setCategory] = useState<AnnotationCategory>('finding')
-  const [priority, setPriority] = useState<AnnotationPriority>('medium')
+  const [category, setCategory] = useState<AnnotationCategory>(
+    recommendation?.suggestedCategory || 'finding'
+  )
+  const [priority, setPriority] = useState<AnnotationPriority>(
+    recommendation?.suggestedPriority || 'medium'
+  )
+
+  useEffect(() => {
+    if (recommendation) {
+      setCategory(recommendation.suggestedCategory)
+      setPriority(recommendation.suggestedPriority)
+    }
+  }, [recommendation])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -85,6 +99,15 @@ export function AnnotationForm({
         <div className="annotation-form__coordinates">
           <span>Position: ({Math.round(coordinates.x)}, {Math.round(coordinates.y)})</span>
         </div>
+
+        {recommendation && (
+          <div className="annotation-form__recommendation">
+            <div className="annotation-form__recommendation-icon">💡</div>
+            <div className="annotation-form__recommendation-text">
+              {recommendation.reason}
+            </div>
+          </div>
+        )}
 
         <div className="annotation-form__actions">
           <button type="submit" className="annotation-form__btn annotation-form__btn--primary">

@@ -51,6 +51,9 @@ export const createMockImage = (): MedicalImage => {
       studyDate: new Date().toISOString(),
       seriesNumber: 1,
       sliceThickness: 1.0,
+      studyType: 'chest',
+      bodyPart: 'chest',
+      seriesDescription: 'CT Chest with Contrast',
     },
   }
 }

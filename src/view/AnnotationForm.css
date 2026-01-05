@@ -92,6 +92,28 @@
   margin-bottom: 1rem;
 }
 
+.annotation-form__recommendation {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: #2a3a2a;
+  border: 1px solid #3a5a3a;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.75rem;
+  color: #8fcc8f;
+  line-height: 1.4;
+}
+
+.annotation-form__recommendation-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+.annotation-form__recommendation-text {
+  flex: 1;
+}
+
 .annotation-form__actions {
   display: flex;
   gap: 0.5rem;
