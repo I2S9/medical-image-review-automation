@@ -21,18 +21,70 @@
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 #root {
   width: 100%;
-  margin: 0 auto;
-  text-align: center;
+  height: 100%;
+  margin: 0;
+  text-align: left;
 }
 
 .app {
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  padding: 0;
+  overflow: hidden;
+}
+
+.app__header {
+  padding: 1rem 1.5rem;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app__header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.app__workflow-status {
+  padding: 0.5rem 1rem;
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: #ccc;
+  text-transform: capitalize;
+}
+
+.app__main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.app__viewer-section {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app__panel-section {
+  width: 300px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
 }

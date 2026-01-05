@@ -1,4 +1,5 @@
 import { Annotation } from '@model/Annotation'
+import './AnnotationPanel.css'
 
 interface AnnotationPanelProps {
   annotations: Annotation[]
