@@ -27,7 +27,7 @@
       "@model/*": ["src/model/*"],
       "@view/*": ["src/view/*"],
       "@controller/*": ["src/controller/*"],
-      "@automation/*": ["src/automation/*"],
+      "@ai/*": ["src/ai/*"],
       "@utils/*": ["src/utils/*"]
     }
   },

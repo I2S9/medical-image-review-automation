@@ -10,7 +10,7 @@ export default defineConfig({
       '@model': path.resolve(__dirname, './src/model'),
       '@view': path.resolve(__dirname, './src/view'),
       '@controller': path.resolve(__dirname, './src/controller'),
-      '@automation': path.resolve(__dirname, './src/automation'),
+      '@ai': path.resolve(__dirname, './src/ai'),
       '@utils': path.resolve(__dirname, './src/utils'),
     },
   },
