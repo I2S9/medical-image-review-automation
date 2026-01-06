@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { MedicalImage } from '@model/MedicalImage'
 import { Annotation } from '@model/Annotation'
-import { ViewController, ViewState } from '@controller/ViewController'
+import { ViewController, ViewState, ViewOrientation } from '@controller/ViewController'
 import { AnnotationRecommendation } from '@ai/ContextAnalyzer'
 import { AnnotationForm } from './AnnotationForm'
 import './ImageViewer.css'
@@ -21,6 +21,8 @@ interface ImageViewerProps {
   getAnnotationRecommendation?: (
     coordinates: { x: number; y: number }
   ) => AnnotationRecommendation | undefined
+  onRecommendedView?: () => void
+  recommendedView?: ViewOrientation | null
 }
 
 export function ImageViewer({

@@ -236,7 +236,7 @@ export function AnnotationForm({
 
         {recommendation && (
           <div className="annotation-form__recommendation">
-            <div className="annotation-form__recommendation-icon">💡</div>
+            <div className="annotation-form__recommendation-icon">i</div>
             <div className="annotation-form__recommendation-text">
               {recommendation.reason}
             </div>
