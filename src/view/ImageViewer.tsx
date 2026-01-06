@@ -56,21 +56,46 @@ export function ImageViewer({
     clientX: number,
     clientY: number
   ): { x: number; y: number } | null => {
-    if (!containerRef.current || !imageRef.current) return null
+    if (!containerRef.current || !imageRef.current || !image) return null
 
-    const rect = containerRef.current.getBoundingClientRect()
-    const containerX = clientX - rect.left
-    const containerY = clientY - rect.top
+    if (!isFinite(clientX) || !isFinite(clientY)) {
+      return null
+    }
 
-    const containerCenterX = rect.width / 2
-    const containerCenterY = rect.height / 2
+    try {
+      const rect = containerRef.current.getBoundingClientRect()
+      const containerX = clientX - rect.left
+      const containerY = clientY - rect.top
 
-    const imageX = (containerX - containerCenterX - viewState.pan.x) / viewState.zoom + image.width / 2
-    const imageY = (containerY - containerCenterY - viewState.pan.y) / viewState.zoom + image.height / 2
+      if (!isFinite(containerX) || !isFinite(containerY)) {
+        return null
+      }
 
-    return {
-      x: Math.max(0, Math.min(image.width, imageX)),
-      y: Math.max(0, Math.min(image.height, imageY)),
+      const containerCenterX = rect.width / 2
+      const containerCenterY = rect.height / 2
+
+      if (!isFinite(containerCenterX) || !isFinite(containerCenterY)) {
+        return null
+      }
+
+      const imageX =
+        (containerX - containerCenterX - viewState.pan.x) / viewState.zoom +
+        image.width / 2
+      const imageY =
+        (containerY - containerCenterY - viewState.pan.y) / viewState.zoom +
+        image.height / 2
+
+      if (!isFinite(imageX) || !isFinite(imageY)) {
+        return null
+      }
+
+      return {
+        x: Math.max(0, Math.min(image.width, imageX)),
+        y: Math.max(0, Math.min(image.height, imageY)),
+      }
+    } catch (error) {
+      console.error('Error calculating image coordinates:', error)
+      return null
     }
   }
 
@@ -139,13 +164,36 @@ export function ImageViewer({
     category: 'finding' | 'landmark' | 'measurement' | 'other'
     priority: 'low' | 'medium' | 'high'
   }) => {
-    if (pendingAnnotation && onAnnotationCreate) {
+    if (!pendingAnnotation || !onAnnotationCreate || !image) {
+      setPendingAnnotation(null)
+      return
+    }
+
+    try {
+      const coords = pendingAnnotation.imageCoords
+
+      if (
+        !isFinite(coords.x) ||
+        !isFinite(coords.y) ||
+        coords.x < 0 ||
+        coords.x > image.width ||
+        coords.y < 0 ||
+        coords.y > image.height
+      ) {
+        console.error('Invalid coordinates for annotation')
+        setPendingAnnotation(null)
+        return
+      }
+
       onAnnotationCreate({
-        coordinates: pendingAnnotation.imageCoords,
+        coordinates: coords,
         ...data,
       })
+      setPendingAnnotation(null)
+    } catch (error) {
+      console.error('Error saving annotation:', error)
+      setPendingAnnotation(null)
     }
-    setPendingAnnotation(null)
   }
 
   const handleAnnotationFormCancel = () => {

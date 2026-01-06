@@ -6,8 +6,10 @@ import { AnnotationPanel } from '@view/AnnotationPanel'
 import { WorkflowStepper } from '@view/WorkflowStepper'
 import { ContextInsights } from '@view/ContextInsights'
 import { ContextAnalyzer } from '@ai/ContextAnalyzer'
+import { ErrorBoundary } from '@components/ErrorBoundary'
 import { createMockImage } from '@utils/mockData'
 import { createAnnotation } from '@utils/annotationUtils'
+import { handleError, logError } from '@utils/errorHandling'
 
 function App() {
   const [workflowController] = useState(() => new WorkflowController())
@@ -50,25 +52,33 @@ function App() {
   }) => {
     if (!workflowState.currentImage) return
 
-    const annotation = createAnnotation(
-      workflowState.currentImage.id,
-      data.coordinates,
-      data.type,
-      data.category,
-      data.priority
-    )
+    try {
+      const annotation = createAnnotation(
+        workflowState.currentImage.id,
+        data.coordinates,
+        data.type,
+        data.category,
+        data.priority,
+        workflowState.currentImage.width,
+        workflowState.currentImage.height
+      )
 
-    workflowController.addAnnotation(annotation)
-    setWorkflowUpdate((prev) => prev + 1)
+      workflowController.addAnnotation(annotation)
+      setWorkflowUpdate((prev) => prev + 1)
 
-    const recommendedView = contextAnalyzer.analyzeRecommendedView(
-      workflowState.currentImage,
-      [...workflowState.annotations, annotation]
-    )
+      const recommendedView = contextAnalyzer.analyzeRecommendedView(
+        workflowState.currentImage,
+        [...workflowState.annotations, annotation]
+      )
 
-    if (recommendedView.confidence === 'high') {
-      viewController.setOrientation(recommendedView.orientation)
-      setViewStateUpdate((prev) => prev + 1)
+      if (recommendedView.confidence === 'high') {
+        viewController.setOrientation(recommendedView.orientation)
+        setViewStateUpdate((prev) => prev + 1)
+      }
+    } catch (error) {
+      const appError = handleError(error, 'handleAnnotationCreate')
+      logError(appError, 'App')
+      console.error('Failed to create annotation:', appError.userMessage)
     }
   }
 
@@ -103,7 +113,8 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <ErrorBoundary>
+      <div className="app">
       <header className="app__header">
         <h1>Medical Image Review Automation</h1>
         <div className="app__workflow-controls">
@@ -179,7 +190,8 @@ function App() {
           />
         </div>
       </main>
-    </div>
+      </div>
+    </ErrorBoundary>
   )
 }
 

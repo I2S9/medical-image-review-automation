@@ -5,6 +5,11 @@ import {
   AnnotationPriority,
 } from '@model/Annotation'
 import { AnnotationRecommendation } from '@ai/ContextAnalyzer'
+import {
+  validateAnnotationType,
+  validateAnnotationCategory,
+  validateAnnotationPriority,
+} from '@utils/validation'
 import './AnnotationForm.css'
 
 interface AnnotationFormProps {
@@ -31,17 +36,117 @@ export function AnnotationForm({
   const [priority, setPriority] = useState<AnnotationPriority>(
     recommendation?.suggestedPriority || 'medium'
   )
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     if (recommendation) {
-      setCategory(recommendation.suggestedCategory)
-      setPriority(recommendation.suggestedPriority)
+      const categoryValidation = validateAnnotationCategory(
+        recommendation.suggestedCategory
+      )
+      const priorityValidation = validateAnnotationPriority(
+        recommendation.suggestedPriority
+      )
+
+      if (categoryValidation.isValid && priorityValidation.isValid) {
+        setCategory(recommendation.suggestedCategory)
+        setPriority(recommendation.suggestedPriority)
+      }
     }
   }, [recommendation])
 
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {}
+
+    const typeValidation = validateAnnotationType(type)
+    if (!typeValidation.isValid) {
+      newErrors.type = typeValidation.error || 'Invalid type'
+    }
+
+    const categoryValidation = validateAnnotationCategory(category)
+    if (!categoryValidation.isValid) {
+      newErrors.category = categoryValidation.error || 'Invalid category'
+    }
+
+    const priorityValidation = validateAnnotationPriority(priority)
+    if (!priorityValidation.isValid) {
+      newErrors.priority = priorityValidation.error || 'Invalid priority'
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleTypeChange = (value: string) => {
+    const validation = validateAnnotationType(value)
+    if (validation.isValid) {
+      setType(value as AnnotationType)
+      setErrors((prev) => {
+        const next = { ...prev }
+        delete next.type
+        return next
+      })
+    } else {
+      setErrors((prev) => ({
+        ...prev,
+        type: validation.error || 'Invalid type',
+      }))
+    }
+  }
+
+  const handleCategoryChange = (value: string) => {
+    const validation = validateAnnotationCategory(value)
+    if (validation.isValid) {
+      setCategory(value as AnnotationCategory)
+      setErrors((prev) => {
+        const next = { ...prev }
+        delete next.category
+        return next
+      })
+    } else {
+      setErrors((prev) => ({
+        ...prev,
+        category: validation.error || 'Invalid category',
+      }))
+    }
+  }
+
+  const handlePriorityChange = (value: string) => {
+    const validation = validateAnnotationPriority(value)
+    if (validation.isValid) {
+      setPriority(value as AnnotationPriority)
+      setErrors((prev) => {
+        const next = { ...prev }
+        delete next.priority
+        return next
+      })
+    } else {
+      setErrors((prev) => ({
+        ...prev,
+        priority: validation.error || 'Invalid priority',
+      }))
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSave({ type, category, priority })
+
+    if (isSubmitting) return
+
+    if (!validateForm()) {
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      onSave({ type, category, priority })
+    } catch (error) {
+      setErrors({
+        submit: 'Failed to create annotation. Please try again.',
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -62,11 +167,18 @@ export function AnnotationForm({
           <select
             id="type"
             value={type}
-            onChange={(e) => setType(e.target.value as AnnotationType)}
+            onChange={(e) => handleTypeChange(e.target.value)}
+            aria-invalid={!!errors.type}
+            aria-describedby={errors.type ? 'type-error' : undefined}
           >
             <option value="point">Point</option>
             <option value="region">Region</option>
           </select>
+          {errors.type && (
+            <span id="type-error" className="annotation-form__error" role="alert">
+              {errors.type}
+            </span>
+          )}
         </div>
 
         <div className="annotation-form__field">
@@ -74,13 +186,24 @@ export function AnnotationForm({
           <select
             id="category"
             value={category}
-            onChange={(e) => setCategory(e.target.value as AnnotationCategory)}
+            onChange={(e) => handleCategoryChange(e.target.value)}
+            aria-invalid={!!errors.category}
+            aria-describedby={errors.category ? 'category-error' : undefined}
           >
             <option value="finding">Finding</option>
             <option value="landmark">Landmark</option>
             <option value="measurement">Measurement</option>
             <option value="other">Other</option>
           </select>
+          {errors.category && (
+            <span
+              id="category-error"
+              className="annotation-form__error"
+              role="alert"
+            >
+              {errors.category}
+            </span>
+          )}
         </div>
 
         <div className="annotation-form__field">
@@ -88,12 +211,23 @@ export function AnnotationForm({
           <select
             id="priority"
             value={priority}
-            onChange={(e) => setPriority(e.target.value as AnnotationPriority)}
+            onChange={(e) => handlePriorityChange(e.target.value)}
+            aria-invalid={!!errors.priority}
+            aria-describedby={errors.priority ? 'priority-error' : undefined}
           >
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
           </select>
+          {errors.priority && (
+            <span
+              id="priority-error"
+              className="annotation-form__error"
+              role="alert"
+            >
+              {errors.priority}
+            </span>
+          )}
         </div>
 
         <div className="annotation-form__coordinates">
@@ -109,9 +243,19 @@ export function AnnotationForm({
           </div>
         )}
 
+        {errors.submit && (
+          <div className="annotation-form__error annotation-form__error--submit" role="alert">
+            {errors.submit}
+          </div>
+        )}
+
         <div className="annotation-form__actions">
-          <button type="submit" className="annotation-form__btn annotation-form__btn--primary">
-            Create
+          <button
+            type="submit"
+            className="annotation-form__btn annotation-form__btn--primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Creating...' : 'Create'}
           </button>
           <button
             type="button"

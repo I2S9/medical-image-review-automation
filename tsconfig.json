@@ -28,7 +28,8 @@
       "@view/*": ["src/view/*"],
       "@controller/*": ["src/controller/*"],
       "@ai/*": ["src/ai/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@components/*": ["src/components/*"]
     }
   },
   "include": ["src"],

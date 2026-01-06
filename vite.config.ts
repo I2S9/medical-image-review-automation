@@ -12,6 +12,7 @@ export default defineConfig({
       '@controller': path.resolve(__dirname, './src/controller'),
       '@ai': path.resolve(__dirname, './src/ai'),
       '@utils': path.resolve(__dirname, './src/utils'),
+      '@components': path.resolve(__dirname, './src/components'),
     },
   },
 })

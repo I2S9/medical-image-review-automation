@@ -151,3 +151,24 @@
   background-color: #4a4a4a;
   border-color: #555;
 }
+
+.annotation-form__error {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #ff6b6b;
+  line-height: 1.4;
+}
+
+.annotation-form__error--submit {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background-color: #4a2a2a;
+  border: 1px solid #5a3a3a;
+  border-radius: 4px;
+}
+
+.annotation-form__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
