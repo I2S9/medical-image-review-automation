@@ -66,6 +66,18 @@
   cursor: not-allowed;
 }
 
+.image-viewer__control-btn--recommended {
+  background-color: #2a4a4a;
+  border-color: #4a9eff;
+  color: #4a9eff;
+  font-weight: 600;
+}
+
+.image-viewer__control-btn--recommended:hover {
+  background-color: #3a5a5a;
+  border-color: #5aaeff;
+}
+
 .image-viewer__zoom-value {
   min-width: 60px;
   text-align: center;

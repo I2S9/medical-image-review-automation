@@ -152,6 +152,12 @@ function App() {
                 coordinates
               )
             }}
+            onRecommendedView={() => {
+              setViewStateUpdate((prev) => prev + 1)
+            }}
+            recommendedView={
+              contextAnalysis?.recommendedView.orientation || null
+            }
           />
         </div>
         <div className="app__panel-section">

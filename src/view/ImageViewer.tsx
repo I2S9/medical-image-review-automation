@@ -31,6 +31,8 @@ export function ImageViewer({
   onAnnotationCreate,
   onAnnotationSelect,
   getAnnotationRecommendation,
+  onRecommendedView,
+  recommendedView,
 }: ImageViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
@@ -225,6 +227,19 @@ export function ImageViewer({
           >
             Reset
           </button>
+          {recommendedView && onRecommendedView && (
+            <button
+              className="image-viewer__control-btn image-viewer__control-btn--recommended"
+              onClick={() => {
+                viewController.setOrientation(recommendedView)
+                triggerUpdate()
+                onRecommendedView()
+              }}
+              title={`Switch to recommended ${recommendedView} view`}
+            >
+              Recommended View
+            </button>
+          )}
         </div>
       </div>
       <div

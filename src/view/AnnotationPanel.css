@@ -16,6 +16,15 @@
   padding: 1rem;
   background-color: #2a2a2a;
   border-bottom: 1px solid #333;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.annotation-panel__header-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .annotation-panel__header h3 {
@@ -30,6 +39,23 @@
   border-radius: 12px;
   font-size: 0.875rem;
   color: #ccc;
+}
+
+.annotation-panel__stat {
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.annotation-panel__stat--high {
+  background-color: #4a2a2a;
+  color: #cc8f8f;
+}
+
+.annotation-panel__stat--finding {
+  background-color: #2a3a4a;
+  color: #8fafff;
 }
 
 .annotation-panel__list {
@@ -97,6 +123,40 @@
 .priority--high {
   background-color: #4a2a2a;
   color: #cc8f8f;
+}
+
+.annotation-panel__group {
+  margin-bottom: 1rem;
+}
+
+.annotation-panel__group:last-child {
+  margin-bottom: 0;
+}
+
+.annotation-panel__group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background-color: #2a2a2a;
+  border-bottom: 1px solid #333;
+  margin-bottom: 0.5rem;
+  border-radius: 4px 4px 0 0;
+}
+
+.annotation-panel__group-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ccc;
+  text-transform: capitalize;
+}
+
+.annotation-panel__group-count {
+  font-size: 0.75rem;
+  color: #888;
+  background-color: #3a3a3a;
+  padding: 0.125rem 0.5rem;
+  border-radius: 10px;
 }
 
 .annotation-panel__item-category {
